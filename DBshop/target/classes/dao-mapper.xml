@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.shop.mybatis">
+
+
+	<!-- =====================로그인========================= -->
+	<select id="login"
+		resultType="com.company.shop.usersbean.UsersDto">
+		select * from users where id=#{id} and pw=#{pw}
+	</select>
+	<!-- =====================회원가입========================= -->
+	<insert id="insertUser">
+		INSERT INTO users VALUES
+		(NULL,#{id},#{pw},#{name},#{email},#{zipCode},#{address},#{address2},#{phone},DEFAULT,DEFAULT,now())
+	</insert>
+	<!-- 회원가입시 아이디 중복체크 -->
+   <select id="checkDataJSon" resultType="Integer">
+      select count(*) from users 
+      where id=#{id}
+   </select>
+	<!-- =====================마이페이지========================= -->
+	<select id="pwchk" resultType="Integer">
+		select count(idx) from users where
+		idx=#{idx} and id=#{id} and pw=#{pw}
+	</select>
+
+	<select id="getmyinfo"
+		resultType="com.company.shop.usersbean.UsersDto">
+		select * from users where id=#{id}
+	</select>
+
+	<update id="deleteusers">
+		update users set useyn=2 where id=#{id}
+	</update>
+
+	<update id="updateusers">
+		update users set pw=#{pw}, email=#{email}, zipCode=#{zipCode},
+		address=#{address}, address2=#{address2}, phone=#{phone} where
+		id=#{id}
+	</update>
+	<!-- =====================게시판========================= -->
+	<select id="productAll"
+		resultType="com.company.shop.productbean.ProductDto">
+		select * from product
+	</select>
+	<!-- 페이징 -->
+	<select id="productPaging"
+		resultType="com.company.shop.productbean.ProductDto">
+		select * from product limit #{numTmp}, #{pageCount}
+	</select>
+	<select id="productCount" resultType="Integer">
+		select count(productNum) from product
+	</select>
+
+	<select id="productSelect"
+		resultType="com.company.shop.productbean.ProductDto">
+		select * from product where productNum=#{productNum}
+	</select>
+
+	<select id="productSelectKind"
+		resultType="com.company.shop.productbean.ProductDto">
+		select * from product where kind=#{kind}
+	</select>
+
+	<select id="productSearch"
+		resultType="com.company.shop.productbean.ProductDto">
+		SELECT * FROM product WHERE NAME LIKE=%#{insertText}% 
+	</select>
+	
+	<insert id="productWriteProc">
+		INSERT INTO product VALUES (NULL, #{kind}, #{price}, #{name}, #{contents}, #{image}, 0, now())
+	</insert>
+	
+	<select id="productHit">
+		update product set hit=hit+1 where productNum=#{productNum} 
+	</select>
+	
+	<select id="productDelete">
+		delete from product where productNum=#{productNum} 
+	</select>
+	
+	<select id="productUpdateProc">
+		update product set kind=#{kind}, price=#{price}, name=#{name}, contents=#{contents}, image=#{image} where productNum=#{productNum} 
+	</select>
+	<!-- ======================QnA======================== -->
+	<insert id="insertQna">
+		INSERT INTO qna VALUES (NULL, #{title}, #{content}, #{id}, now())
+	</insert>
+
+	<select id="selectAllQna"
+		resultType="com.company.shop.qnabean.QnaDto">
+		select * from qna
+	</select>
+	
+	<select id="selectAllQnaPaging"
+		resultType="com.company.shop.qnabean.QnaDto">
+		select * from qna limit #{numTmp}, #{pageCount}
+	</select>
+	<select id="qnaCount" resultType="Integer">
+		select count(qnaNum) from qna
+	</select>
+	
+	<select id="selectOneQna"
+		resultType="com.company.shop.qnabean.QnaDto">
+		select * from qna where qnaNum=#{qnaNum}
+	</select>
+
+	<select id="selectOnePrevQna"
+		resultType="com.company.shop.qnabean.QnaDto">
+		select * from qna where qnaNum=(select max(qnaNum) from qna where qnaNum
+		&#60; #{qnaNum})
+	</select>
+
+	<select id="selectOneNextQna"
+		resultType="com.company.shop.qnabean.QnaDto">
+		select * from qna where qnaNum=(select min(qnaNum) from qna where qnaNum >
+		#{qnaNum})
+	</select>
+	
+	<select id="qnaDelete">
+      delete from qna where qnaNum=#{qnaNum} 
+   </select>
+   
+   <update id="qnaUpdate">
+      update qna set title=#{title}, content=#{content} where qnaNum=#{qnaNum}
+   </update>
+   <!-- ======================QnaAnswer======================== -->
+	
+	<insert id="qnaAnswerInsert">
+		INSERT INTO qnaAnswer VALUES (NULL, #{content}, now())
+	</insert>
+	
+	<select id="qnaAnswerDelete">
+		delete from qnaAnswer where answerNum=#{qnaNum} 
+	</select>
+	
+	<select id="checkExistAns" resultType="boolean">
+		select * from qnaAnswer where answerNum=#{qnaNum} 
+	</select>
+	
+	<select id="qnaAnswerRead" resultType="com.company.shop.qnaAnswerbean.QnaAnswerDto">
+		select * from qnaAnswer where answerNum=#{qnaNum} 
+	</select>
+	
+	<!-- ============================================== -->
+	<!-- ============================================== -->
+
+
+	<select id="" resultType="Integer">
+		select count(idx) from users where
+		id=#{id}
+	</select>
+	<!-- =======================고객 주문 조회======================= -->
+	<select id="orderChk" resultType="com.company.shop.orderbean.OrderDto">
+      SELECT * FROM orders WHERE id=#{id}
+  	</select>
+  	<select id="delivery" resultType="com.company.shop.orderbean.OrderDto">
+      SELECT * FROM orders
+   	</select>
+   	<select id="deliveryReady" resultType="com.company.shop.orderbean.OrderDto">
+      SELECT * FROM orders where result = 1
+   	</select>
+   	<select id="deliveryOnly" resultType="com.company.shop.orderbean.OrderDto">
+      SELECT * FROM orders where result = 2
+   	</select>
+   	<!-- =======================고객 배송현황 변경======================= -->
+   	<update id="deliveryProc">
+      update orders set result=2 where orderNum=#{orderNum}
+   </update>
+   <update id="deliveryCancelProc">
+      update orders set result=1 where orderNum=#{orderNum}
+   </update>
+	  <!-- =======================상품주문입력======================= -->
+	  
+	<insert id="insertOrder">
+      INSERT INTO orders VALUES (NULL,#{id},#{prodNum},#{quantity},DEFAULT,now())
+   	</insert>
+   
+   <select id="readOrder"
+      resultType="com.company.shop.orderbean.OrderDto">
+      SELECT * FROM orders WHERE orderNum=#{orderNum}
+   </select>
+   
+   <select id="readProduct" resultType="com.company.shop.productbean.ProductDto">
+      SELECT * FROM product WHERE productNum=#{productNum}
+   </select>
+
+
+</mapper>  
