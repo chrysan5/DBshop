@@ -3,8 +3,8 @@ myBatis 이용한 여성옷 쇼핑몰 사이트
 <p align='center'>
 
   <summary>홈 페이지</summary>
+  <img width='80%' src='https://user-images.githubusercontent.com/91243121/173186990-3dfbc623-454b-4864-9aff-3fcc5ba26875.png'><br><br>
   <img width='80%' src='https://user-images.githubusercontent.com/91243121/173186569-56528384-8fc7-40dc-8058-6b30215ca1d2.jpg'>
-<img width='80%' src='https://user-images.githubusercontent.com/91243121/173186990-3dfbc623-454b-4864-9aff-3fcc5ba26875.png'>
   <br><br><br><br><br>
   
   <summary>회원가입, 로그인, 개인정보 페이지</summary>
